@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono,Manrope } from "next/font/google";
 import "./globals.css";
+
 import { cn } from "@/lib/utils";
+import Header from "@/components/custom/header";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -30,7 +32,8 @@ export default function RootLayout({
                         'min-h-screen bg-background font-manrope antialiased',
                         manrope.variable
                     )}>
-        {children}
+                      <Header/>{/**It is going to display in all the pages */}
+       <main> {children}</main>
       </body>
     </html>
   );
