@@ -12,6 +12,7 @@ type PropType = {
 };
 const ToppingCard = ({ topping, selectedToppings, handleCheckBoxCheck }: PropType) => {
     const isCurrentSelected = selectedToppings.some((element) => element.id === topping.id);
+    console.log("Topping Info",topping)
 
     return (
         <Button

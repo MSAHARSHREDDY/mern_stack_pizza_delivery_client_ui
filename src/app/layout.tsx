@@ -33,7 +33,7 @@ export default function RootLayout({
                         manrope.variable
                     )}>
                       <Header/>{/**It is going to display in all the pages */}
-       <main> {children}</main>
+       <main> {children}</main>{/**This file is going to get from folder src/app/(home)/page.tsx */}
       </body>
     </html>
   );

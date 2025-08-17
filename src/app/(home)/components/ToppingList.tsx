@@ -2,6 +2,8 @@
 import React from 'react'
 import ToppingCard from './ToppingCard'
 import { Topping } from '@/lib/types'
+import { Button } from '@/components/ui/button'
+import { ShoppingCart } from 'lucide-react'
 
 const toppings=[
     {
@@ -31,8 +33,11 @@ const ToppingList = () => {
     const [selectedToppings,setSelectedToppings]=React.useState([
         toppings[0]
     ])
+     console.log("selectedToppings",selectedToppings)
 
+     //It is used to handle Tick mark 
     const handleCheckBoxCheck=(topping:Topping)=>{
+        console.log("selectedToppings in handleCheckBoxCheck",selectedToppings)
         const isAlreadyExists=selectedToppings.some((element)=>element.id===topping.id)
         if(isAlreadyExists){
             setSelectedToppings((prev)=>prev.filter((elm)=>elm.id!==topping.id))
@@ -50,6 +55,14 @@ const ToppingList = () => {
                      <ToppingCard topping={topping} key={topping.id} selectedToppings={selectedToppings} handleCheckBoxCheck={handleCheckBoxCheck}/>
                 ))
             }
+            </div>
+
+            <div className='flex items-center justify-between mt-8'>
+                <span className='font-bold'>₹400</span>
+                <Button className='bg-orange-600'>
+                    <ShoppingCart/>
+                    <span>AddToCart</span>
+                </Button>
             </div>
         </section>
   )
