@@ -1,9 +1,10 @@
-
+import { Button } from "@/components/ui/button"
 
 export default function Home() {
   return (
     <div >
-      <h1>Welcome to Next js def</h1>
+      <h1>Welcome Hello </h1>
+      <Button>Button</Button>
     </div>
   );
 }
