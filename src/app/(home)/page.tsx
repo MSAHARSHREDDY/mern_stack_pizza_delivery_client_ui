@@ -76,8 +76,10 @@ export default function Home() {
             </TabsList>
             <TabsContent value="pizza">
              <div className="grid grid-cols-4 gap-6 mt-6">
+              {/**Calling to the ProductCard */}
                {
                 products.map((product)=>(
+                  //Left side product is the name of the prop and right side product is our actual value we are passing in
                   <ProductCard product={product} key={product.id}/>
                 ))
               }
