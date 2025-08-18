@@ -5,8 +5,20 @@ import Link from "next/link"
 import React from "react"
 import { Button } from "../ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { Tenant } from "@/lib/types"
 
-const Header = () => {
+const Header = async() => {
+    {/**Fetching tenant/restarant from backendEnd */}
+    const tenantsResponse=await fetch(`${process.env.BACKEND_URL_FETCH_TENANTS}?perPage=100`,{
+        next:{
+            revalidate:3600 //1 hour
+        }
+    })
+    if(!tenantsResponse.ok){
+        throw new Error("Failed to fetch tenants")
+    }
+    const restaurants:{data:Tenant[]}=await tenantsResponse.json()
+    console.log("restaurants",restaurants)
     return (
         
         <header className="bg-white">
@@ -19,12 +31,14 @@ const Header = () => {
                     </Link>
                     <Select>
                         <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Theme" />
+                            <SelectValue placeholder="Select Restaurant" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="light">Light</SelectItem>
-                            <SelectItem value="dark">Dark</SelectItem>
-                            <SelectItem value="system">System</SelectItem>
+                           {
+                            restaurants.data.map((restaturant)=>(
+                                <SelectItem key={restaturant.id} value={restaturant.id}>{restaturant.name}</SelectItem>
+                            ))
+                           }
                         </SelectContent>
                     </Select>
                 </div>
