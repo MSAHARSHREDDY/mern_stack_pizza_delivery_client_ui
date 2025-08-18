@@ -11,12 +11,13 @@ const Header = async() => {
     {/**Fetching tenant/restarant from backendEnd */}
     const tenantsResponse=await fetch(`${process.env.BACKEND_URL_FETCH_TENANTS}?perPage=100`,{
         next:{
-            revalidate:3600 //1 hour
+            revalidate: 0//0 second It is used for caching the data make sure be aware of this. And fetches new data for every 0 second from backend when u update the data it fetches in 0 second.
         }
     })
     if(!tenantsResponse.ok){
         throw new Error("Failed to fetch tenants")
     }
+    //If you are having pagination we get "data" as name so need to add "data" on i.e  data:Tenant[]
     const restaurants:{data:Tenant[]}=await tenantsResponse.json()
     console.log("restaurants",restaurants)
     return (
