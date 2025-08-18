@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import Image from 'next/image';
 import { Suspense } from "react";
 import ProductList from "./components/ProductList";
+import { SkeletonCard } from "./components/SkeletonCard";
 export default async function Home() {
   return (
     <>
@@ -27,8 +28,9 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* todo: add skeleton component */}
-      <Suspense fallback={'Loading....'}>
+    
+      {/**We have made product list into another component because we are fetching data from backend we need not to stop to load hero section until it fetches */}
+      <Suspense fallback= {<SkeletonCard/>}>
         {/**Here we are rendering product list component */}
         <ProductList />
       </Suspense>

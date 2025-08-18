@@ -48,6 +48,7 @@ const ProductList = async() => {
                     {/**Calling to the ProductCard */}
                     {
                       products.data.filter((product)=>product.category._id===category._id).map((product) => (
+                        //Rendering Product card
                         //Left side product is the name of the prop and right side product is our actual value we are passing in
                         <ProductCard product={product} key={product._id} />
                       ))
