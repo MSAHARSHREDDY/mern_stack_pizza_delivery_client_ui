@@ -1,12 +1,13 @@
 
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 
-import React from 'react'
+import React, { Suspense } from 'react'
 
 import Image from 'next/image';
 
 import { Product } from '@/lib/types';
 import ProductModal from './ProductModal';
+import { SkeletonCard } from './SkeletonCard';
 
 
 
@@ -34,7 +35,10 @@ const ProductCard = ({ product }: PropTypes) => {
                     </p>
                 </div>
                 {/**Rendering product modal */}
-                <ProductModal product={product}/>
+                
+                    <ProductModal product={product}/>
+              
+                
             </CardFooter>
         </Card>
     )

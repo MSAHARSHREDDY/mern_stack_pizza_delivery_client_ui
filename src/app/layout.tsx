@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono,Manrope } from "next/font/google";
+import { Geist, Geist_Mono, Manrope } from "next/font/google";
 import "./globals.css";
 
 import { cn } from "@/lib/utils";
 import Header from "@/components/custom/header";
+import StoreProvider from "./StoreProvider";
 
 const manrope = Manrope({
   subsets: ["latin"],
-  variable:"--font-sans"
+  variable: "--font-sans"
 });
 
 const geistMono = Geist_Mono({
@@ -27,14 +28,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={cn(
-                        'min-h-screen bg-background font-manrope antialiased',
-                        manrope.variable
-                    )}>
-                      <Header/>{/**It is going to display in all the pages */}
-       <main> {children}</main>{/**This file is going to get from folder src/app/(home)/page.tsx */}
-      </body>
+      {/**
+    Here:
+children is whatever you wrap inside <StoreProvider> ... </StoreProvider>.i.e from layout.tsx
+That children is passed into the <Provider> from Redux, so all child components can access the store.
+    */}
+      <StoreProvider>{/**Here store provider is client component */}
+        <body
+          className={cn(
+            'min-h-screen bg-background font-manrope antialiased',
+            manrope.variable
+          )}>
+          <Header />{/**It is going to display in all the pages */}
+          <main> {children}</main>{/**This file is going to get from folder src/app/(home)/page.tsx */}
+        </body>
+      </StoreProvider>
+
     </html>
   );
 }
