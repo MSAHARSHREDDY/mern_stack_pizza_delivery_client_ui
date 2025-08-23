@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { Product } from '@/lib/types';
 import ProductModal from './ProductModal';
 import { SkeletonCard } from './SkeletonCard';
+import { getFromPrice } from '@/lib/utils';
 
 
 
@@ -31,7 +32,7 @@ const ProductCard = ({ product }: PropTypes) => {
                 <div className="flex items-center gap-6 mr-5">
                     <p>
                         <span>From </span>
-                        <span className="font-bold">₹100</span>
+                        <span className="font-bold">₹{getFromPrice(product)}</span>
                     </p>
                 </div>
                 {/**Rendering product modal */}

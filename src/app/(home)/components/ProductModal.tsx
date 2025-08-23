@@ -16,9 +16,16 @@ import { Product, Topping } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
 import { SkeletonCard } from './SkeletonCard';
-import { useAppDispatch } from '@/lib/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 // import {addToCart} from "@/lib/store/features/cart/cartSice"
-import {addToCart} from '@/lib/store/features/cart/cartSice';
+import {addToCart, CartItem} from '@/lib/store/features/cart/cartSice';
+import { Value } from '@radix-ui/react-select';
+import { hashTheItem } from '@/lib/utils';
+import { toast } from "sonner"
+// ✅ Correct import
+
+
+
 
 type ChosenConig = {
     [key: string]: string
@@ -26,7 +33,13 @@ type ChosenConig = {
 
 const ProductModal = ({ product }: { product: Product }) => {
 
+  
+
+    const [dialogOpen,setDialogOpen]=useState(false)
+
     const dispatch=useAppDispatch()//It isused to trigger your action of addToCart
+    //Here we are fetching out the cart items
+    const cartItems=useAppSelector((state)=>state.cart.cartItems)//here "cart" nane is taken from store.ts, "cartItems" name is taken from cartslice.ts
 
     //Here we are fetching the default values of "size" and "crust"
     const defaultConfiguration=Object.entries(product.category.priceConfiguration).map(([Key,value])=>{
@@ -39,6 +52,39 @@ const ProductModal = ({ product }: { product: Product }) => {
      //This is used for selecting topping
     const [selectedToppings, setSelectedToppings] = React.useState<Topping[]>([])
     console.log("selectedToppings", selectedToppings)
+
+    //calculating total price
+    const totalPrice=React.useMemo(()=>{
+        const toppingsTotal=selectedToppings.reduce((acc,curr)=>acc+curr.price,0)
+        console.log("chosen config from totalPrice",chosenConfig,"product",product)
+        const configPricing=Object.entries(chosenConfig).reduce((acc,[key,value])=>{
+            //here Crust,Size is the key and values are Thick,Thin from "Crust" and Small,medium,Large is from "Size"
+            const price=product.priceConfiguration[key].availableOptions[value]
+            return acc+price
+        },0)
+        return configPricing+toppingsTotal
+    },
+    [chosenConfig,selectedToppings,product]//when there is a change it is going to update the value that is why we have kept like that
+)
+
+    //Checing if already exists in the cart
+    const alreadyHasInCart = React.useMemo(() => {
+        const currentConfiguration = {
+            _id: product._id,
+            name: product.name,
+            image: product.image,
+            priceConfiguration: product.priceConfiguration,
+            chosenConfiguration: {
+                priceConfiguration: { ...chosenConfig },
+                selectedToppings: selectedToppings,
+            },
+            qty: 1,
+        };
+
+        const hash = hashTheItem(currentConfiguration);
+        console.log("after Hasing",hash)
+        return cartItems.some((item) => item.hash === hash);
+    }, [product, chosenConfig, selectedToppings, cartItems]);
 
     //It is used to handle Tick mark in topping
     const handleCheckBoxCheck = (topping: Topping) => {
@@ -79,27 +125,37 @@ const ProductModal = ({ product }: { product: Product }) => {
     {/*******It is going to handle to add to cart items added into cart */ }
     const handleAddToCart = (product:Product) => {
         console.log("adding to cart")
-        const itemToAdd={
-            product,
+        const itemToAdd:CartItem={
+           _id:product._id,
+           name:product.name,
+           image:product.image,
+           priceConfiguration:product.priceConfiguration,
             chosenConfiguration:{
                 priceConfiguration:chosenConfig!,
                 selectedToppings:selectedToppings
-            }
+            },
+            qty:1
         }
-        dispatch(addToCart(itemToAdd))
+        dispatch(addToCart(itemToAdd))//itemToAdd format is taken from cartslice.ts file
+        setSelectedToppings([])
+        setDialogOpen(false)
+        toast.success("Item added to cart.")
+
+        
     }
     return (
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger className="bg-orange-600 p-2 rounded-sm font-bold cursor-pointer">Choose</DialogTrigger>
-            <DialogContent className='max-w-3xl p-0' >
+            <DialogContent className="w-[90vw] max-w-[1400px] p-0">
                 <DialogTitle className='mt-3 text-center text-xl font-bold'>Choose Your Pizza</DialogTitle>
                 <div className='flex'>
                     <div className='w-1/3 bg-white rounded p-8 flex items-center justify-center'>
-                        {/**Left side image */}
+
+                        {/******Left side image ********/}
                         <Image src={product.image} width={450} height={450} alt={product.name} />
                     </div>
                     <div className='2/3 p-8'>
-                        {/**right side is data */}
+                        {/*******right side is data *******/}
                         <h3 className=" font-bold">{product.name}</h3>
                         <p className="mt-1">{product.description}</p>
                         <h3 className='mt-6 font-bold'>Choose the size</h3>
@@ -181,20 +237,27 @@ const ProductModal = ({ product }: { product: Product }) => {
 
                         {/**Topping */}
                         <h3 className='mt-6 font-bold'>Toppings</h3>
-                        {/**Rendering toppingList component */}
+                        {/**********Rendering toppingList component ********/}
+                        
                         <Suspense fallback={<SkeletonCard />}>
                             <ToppingList selectedToppings={selectedToppings} handleCheckBoxCheck={handleCheckBoxCheck} />
                         </Suspense>
 
 
                         <div className='flex items-center justify-between mt-8'>
-                            <span className='font-bold'>₹400</span>
+                            <span className='font-bold'>₹{totalPrice}</span>
                             {/**Here onClick only works when the page is "use client" means page need to be in client side only,
                              so what ever the  components are there under "use client" even that component also become "use client" in our case "Topping List component line no-114"
                              */}
-                            <Button className='bg-orange-600' onClick={()=>handleAddToCart(product)}>{/**When user clicks you need to write like this ()=> */}
-                                <ShoppingCart />
-                                <span>AddToCart</span>
+                           
+                            <Button
+                                className={alreadyHasInCart ? 'bg-gray-700' : 'bg-orange-700'}
+                                disabled={alreadyHasInCart}
+                                onClick={() => handleAddToCart(product)}>{/**When user clicks you need to write like this ()=> */}
+                                <ShoppingCart size={20} />
+                                <span className="ml-2">
+                                    {alreadyHasInCart ? 'Already in cart' : 'Add to cart'}
+                                </span>
                             </Button>
                         </div>
 

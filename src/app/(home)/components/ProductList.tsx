@@ -4,7 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Category, Product } from '@/lib/types';
 import ProductCard from './ProductCard';
 
-const ProductList = async() => {
+const ProductList = async({searchParams}:{searchParams:{restaurantId:string}}) => {
+  console.log("searchParam",searchParams.restaurantId)
     
       {/*******Fetching categories from backendEnd **********************/ }
       const catgeoryResponse = await fetch(`${process.env.BACKEND_URL_FETCH_CATEGORIES}`, {
@@ -19,7 +20,7 @@ const ProductList = async() => {
       console.log("categories", categories)
     
       {/******Fetching products from backend*************************** */ }
-      const productResponse = await fetch(`${process.env.BACKEND_URL_FETCH_PRODUCTS}?perPage=100&tenantId=1`, {
+      const productResponse = await fetch(`${process.env.BACKEND_URL_FETCH_PRODUCTS}?perPage=100&tenantId=${searchParams.restaurantId}`, {
         
       })
       if (!productResponse.ok) {

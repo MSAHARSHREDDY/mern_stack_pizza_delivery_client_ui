@@ -7,6 +7,10 @@ import { Button } from "../ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Tenant } from "@/lib/types"
 import CartCounter from "./CartCounter"
+import dynamic from "next/dynamic"
+import CartCounterWithoutSSR from "./CartCounterWithoutSSR"
+import TenantSelect from "./TenantSelect"
+
 
 const Header = async() => {
     {/**Fetching tenant/restarant from backendEnd */}
@@ -31,18 +35,8 @@ const Header = async() => {
                     <Link href="/" className="text-2xl font-bold text-orange-600">
                         🍕 PizzaApp
                     </Link>
-                    <Select>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Select Restaurant" />
-                        </SelectTrigger>
-                        <SelectContent>
-                           {
-                            restaurants.data.map((restaturant)=>(
-                                <SelectItem key={restaturant.id} value={restaturant.id}>{restaturant.name}</SelectItem>
-                            ))
-                           }
-                        </SelectContent>
-                    </Select>
+                    {/**Rendering the list of restaurants */}
+                   <TenantSelect restaurants={restaurants}/>
                 </div>
 
 
@@ -61,11 +55,12 @@ const Header = async() => {
                             </Link>
                         </li>
                     </ul>
-                    {/* <CartCounterWithoutSSR /> */}
-                    {/**Rendering cart component 
+                     {/**Rendering cart component 
                      * Here "store" only works for client side so for that we have to use "use client" in cartCounter component 
                     */}
-                    <CartCounter/>
+                    { <CartCounterWithoutSSR /> }
+                   
+                  
                     <div className="flex items-center ml-12">
                         <Phone />
                         <span>+91 9800 098 998</span>

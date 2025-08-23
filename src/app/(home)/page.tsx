@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Suspense } from "react";
 import ProductList from "./components/ProductList";
 import { SkeletonCard } from "./components/SkeletonCard";
-export default async function Home() {
+export default async function Home({searchParams}:{searchParams:{restaurantId:string}}) {
   return (
     <>
       {/**This is for the main hero section */}
@@ -32,7 +32,7 @@ export default async function Home() {
       {/**We have made product list into another component because we are fetching data from backend we need not to stop to load hero section until it fetches */}
       <Suspense fallback= {<SkeletonCard/>}>
         {/**Here we are rendering product list component */}
-        <ProductList />
+        <ProductList searchParams={searchParams}/>
       </Suspense>
     </>
   );
