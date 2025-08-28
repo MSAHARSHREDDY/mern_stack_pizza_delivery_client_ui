@@ -10,6 +10,9 @@ import { getItemTotal } from '@/lib/utils';
 
 const CartItems = () => {
     const searchParams = useSearchParams();
+//   console.log("restaurantId:", searchParams.get("restaurantId")); 
+// console.log("all params:", searchParams.toString()); 
+
     const router = useRouter();
 
     const [isClient, setIsClient] = React.useState(false);

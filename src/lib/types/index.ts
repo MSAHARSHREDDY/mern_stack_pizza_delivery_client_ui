@@ -62,7 +62,7 @@ export type Topping = {
 };
 
 export type Address = {
-    text: string;
+    address: string;
     isDefault: boolean;
 };
 
