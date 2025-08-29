@@ -20,10 +20,12 @@ export const getCustomer = async (): Promise<Customer> => {
     
 };
 
-export const addAddress = (customerId: string, address: string) =>
-    api.patch(`${ORDER_SERVICE_PREFIX}/customer/addresses/${customerId}`, {
-        address,
-    });
+export const addAddress = async(customerId: string,address:string) =>{
+ const addressInfo=await api.patch(`/customer/addresses/${customerId}`,{address});
+ console.log("addressInfo",addressInfo)
+ return addressInfo.data
+}
+   
 
 export const verifyCoupon = (data: CouponCodeData) =>
     api.post(`${ORDER_SERVICE_PREFIX}/coupons/verify`, data);

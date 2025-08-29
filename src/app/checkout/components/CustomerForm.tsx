@@ -16,13 +16,15 @@ import { useQuery } from '@tanstack/react-query';
 import { getCustomer } from '@/lib/http/api';
 import { Customer } from '@/lib/types';
 
+//It is used for form validation
 const formSchema = z.object({
-  address: z.string({ required_error: 'Please select an address.' }),
-  paymentMode: z.enum(['card', 'cash'], {
-    required_error: 'You need to select a payment mode type.',
+  address: z.string().min(1, { message: "Please select an address." }),
+  paymentMode: z.enum(["card", "cash"], {
+    required_error: "You need to select a payment mode type.",
   }),
   comment: z.any(),
 });
+
 
 const CustomerForm = () => {
 
@@ -42,9 +44,14 @@ const CustomerForm = () => {
     return <h3>Loading...</h3>
   }
 
+  //After submiting the place order
+  const handlePlaceOrder=(data:z.infer<typeof formSchema>)=>{
+    console.log("placeOrderData",data)
+  }
+
   return (
     <Form {...customerForm}>
-      <form>
+      <form onSubmit={customerForm.handleSubmit(handlePlaceOrder)}>
         <div className='flex container gap-6 mt-16 ml-12'>
           <Card className='w-3/5 border-none'>
             <CardHeader>
@@ -93,7 +100,7 @@ const CustomerForm = () => {
                     <div className="flex items-center justify-between">
                       <Label htmlFor="name">Address</Label>
                       {/**Rendering modal */}
-                      <AddAddress />
+                      <AddAddress customerId={customer?customer._id:" "} />
                     </div>
 
                     <FormField

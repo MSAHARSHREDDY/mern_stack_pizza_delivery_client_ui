@@ -56,12 +56,12 @@ const OrderSummary = () => {
                 </div>
 
                 <div className="text-right mt-6">
-                    <Button >
+                    <Button className='bg-orange-600'>
                        
-                            <span className="flex items-center gap-2">
+                            {/* <span className="flex items-center gap-2">
                                 <LoaderCircle className="animate-spin" />
                                 <span>Please wait...</span>
-                            </span>
+                            </span> */}
                        
                             <span>Place order</span>
                        
