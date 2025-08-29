@@ -19,11 +19,12 @@ import { Customer } from '@/lib/types';
 //It is used for form validation
 const formSchema = z.object({
   address: z.string().min(1, { message: "Please select an address." }),
-  paymentMode: z.enum(["card", "cash"], {
-    required_error: "You need to select a payment mode type.",
+  paymentMode: z.enum(["card", "cash"] as const, { 
+    message: "You need to select a payment mode type." 
   }),
-  comment: z.any(),
+  comment: z.any(), // must be z.any() with parentheses
 });
+
 
 
 const CustomerForm = () => {

@@ -1,4 +1,4 @@
-import { CartItem } from '../store/features/cart/cartSlice';
+import { CartItem } from '../store/features/cart/cartSice';
 
 export interface Tenant {
     id: string;
@@ -103,4 +103,9 @@ export interface Order {
     orderStatus: string;
     paymentStatus: string;
     createdAt: string;
+}
+
+export interface CouponenData{
+    valid:boolean,
+    discount:number
 }

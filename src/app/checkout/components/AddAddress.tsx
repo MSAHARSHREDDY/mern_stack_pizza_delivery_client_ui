@@ -18,20 +18,20 @@ const formSchema = z.object({
     }),
 });
 
-const AddAddress = ({customerId}:{customerId:string}) => {
-    const[isModalOpen,setIsModalOpen]=useState(false)
+const AddAddress = ({ customerId }: { customerId: string }) => {
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
-     const addressForm = useForm<z.infer<typeof formSchema>>({
+    const addressForm = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     });
 
-    const queryClient=useQueryClient()
+    const queryClient = useQueryClient()
 
     //calling to backend function for posting the data
-    const {mutate,isPending}=useMutation({
-        mutationKey:["address",customerId],
+    const { mutate, isPending } = useMutation({
+        mutationKey: ["address", customerId],
         mutationFn: (address: string) => addAddress(customerId, address),
-        onSuccess:async()=>{
+        onSuccess: async () => {
             addressForm.reset()
             setIsModalOpen(false)
             await queryClient.refetchQueries({ queryKey: ["customer"] });//queryClient.refetchQueries({ queryKey: ["customer"] }) forces a refresh of customer data after you add an address.
@@ -39,13 +39,18 @@ const AddAddress = ({customerId}:{customerId:string}) => {
     })
 
     //posting the form data when you click on save button
-    const handleAddressAdd=(data:z.infer<typeof formSchema>)=>{
-        console.log("data",data)
-        mutate(data.address)//here we are calling mutate function
+    const handleAddressAdd = (e: React.FormEvent<HTMLFormElement>) => {
+        e.stopPropagation()
+
+        return addressForm.handleSubmit((data: z.infer<typeof formSchema>) => {
+            console.log("data", data)
+            mutate(data.address)//here we are calling mutate function
+            //
+        })(e)
     }
-    
-  return (
-     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>{/**onOpenChange after making changes it closes the modal */}
+
+    return (
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>{/**onOpenChange after making changes it closes the modal */}
             <DialogTrigger asChild>
                 <Button size={'sm'} variant={'link'} className='text-orange-600'>
                     <Plus size={'16'} />
@@ -54,7 +59,7 @@ const AddAddress = ({customerId}:{customerId:string}) => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <Form {...addressForm}>
-                    <form onSubmit={addressForm.handleSubmit(handleAddressAdd)} >
+                    <form onSubmit={handleAddressAdd} >
                         <DialogHeader>
                             <DialogTitle>Add Address</DialogTitle>
                             <DialogDescription>
@@ -78,7 +83,7 @@ const AddAddress = ({customerId}:{customerId:string}) => {
                                         );
                                     }}
                                 />
-                               
+
                             </div>
                         </div>
                         <DialogFooter>
@@ -97,7 +102,7 @@ const AddAddress = ({customerId}:{customerId:string}) => {
                 </Form>
             </DialogContent>
         </Dialog>
-  )
+    )
 }
 
 export default AddAddress

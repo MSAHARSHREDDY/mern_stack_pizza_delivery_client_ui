@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CouponCodeData, Customer, OrderData } from '../types';
+import { CouponCodeData, CouponenData, Customer, OrderData } from '../types';
 
 export const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_ODERSERVICE_URL,
@@ -27,8 +27,14 @@ export const addAddress = async(customerId: string,address:string) =>{
 }
    
 
-export const verifyCoupon = (data: CouponCodeData) =>
-    api.post(`${ORDER_SERVICE_PREFIX}/coupons/verify`, data);
+export const verifyCoupon = async(data: CouponCodeData) =>{
+const verifyCoupon=await api.post(`/coupons/verify`, data);
+console.log("verifyCoupon",verifyCoupon)
+return verifyCoupon.data;
+}
+
+
+    
 
 export const createOrder = (data: OrderData, idempotencyKey: string) =>
     api.post(`${ORDER_SERVICE_PREFIX}/orders`, data, {
