@@ -11,7 +11,7 @@ import { useSearchParams } from 'next/navigation'
 import React, { useState } from 'react'
 
 
-const OrderSummary = () => {
+const OrderSummary = ({handleCouponCodeChange}:{handleCouponCodeChange:(code:string)=>void}) => {
 
     const searchParams = useSearchParams()
 
@@ -78,13 +78,13 @@ const OrderSummary = () => {
             console.log("data received", data);
             if (data.valid) {
                 setDiscountError('');
-                //handleCouponCodeChange(couponCodeRef.current ? couponCodeRef.current.value : '');
+                handleCouponCodeChange(couponCodeRef.current ? couponCodeRef.current.value : '');
                 setDiscountPercentage(data.discount);
                 return;
             }
 
             setDiscountError('Coupon is invalid');
-            //handleCouponCodeChange('');
+            handleCouponCodeChange('');
             setDiscountPercentage(0);
         },
     });

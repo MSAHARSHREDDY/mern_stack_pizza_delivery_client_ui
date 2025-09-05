@@ -25,23 +25,34 @@ export const addAddress = async(customerId: string,address:string) =>{
  console.log("addressInfo",addressInfo)
  return addressInfo.data
 }
-   
-
-export const verifyCoupon = async(data: CouponCodeData) =>{
-const verifyCoupon=await api.post(`/coupons/verify`, data);
-console.log("verifyCoupon",verifyCoupon)
-return verifyCoupon.data;
-}
 
 
-    
 
-export const createOrder = (data: OrderData, idempotencyKey: string) =>
-    api.post(`${ORDER_SERVICE_PREFIX}/orders`, data, {
-        headers: {
-            'Idempotency-Key': idempotencyKey,
-        },
-    });
+// export const verifyCoupon = async(data: CouponCodeData) =>{
+// const verifyCoupon=await api.post(`/coupons/verify`, data);
+// console.log("verifyCoupon",verifyCoupon)
+// return verifyCoupon.data;
+// }
+export const verifyCoupon = async (
+  data: CouponCodeData
+): Promise<CouponenData> => {
+  const response = await api.post<CouponenData>(`/coupons/verify`, data);
+  return response.data;
+};
+
+
+
+type CreateOrderResponse = {
+  paymentUrl: string | null;
+};
+
+export const createOrder = ( data: OrderData,idempotencyKey: string) => {
+  return api.post<CreateOrderResponse>(`/orders`, data, {
+    headers: {
+      "Idempotency-Key": idempotencyKey,
+    },
+  });
+};
 
 export const getSingleOrder = (orderId: string) =>
     api.get(`${ORDER_SERVICE_PREFIX}/orders/${orderId}?fields=orderStatus`);

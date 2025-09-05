@@ -12,9 +12,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import AddAddress from './AddAddress';
 import { Coins, CreditCard } from 'lucide-react';
 import OrderSummary from './OrderSummary';
-import { useQuery } from '@tanstack/react-query';
-import { getCustomer } from '@/lib/http/api';
-import { Customer } from '@/lib/types';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { createOrder, getCustomer } from '@/lib/http/api';
+import { Customer, OrderData } from '@/lib/types';
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
+import { useSearchParams } from 'next/navigation';
+import { clearCart } from '@/lib/store/features/cart/cartSice';
+import { v4 as uuidv4 } from 'uuid';
 
 //It is used for form validation
 const formSchema = z.object({
@@ -29,9 +33,18 @@ const formSchema = z.object({
 
 const CustomerForm = () => {
 
+    const dispatch = useAppDispatch();
   const customerForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+
+  const searchParam = useSearchParams();
+
+    const chosenCouponCode = React.useRef('');
+    const idempotencyKeyRef = React.useRef('');
+
+    const cart = useAppSelector((state) => state.cart);
+
 
   //***fetching the customer information****
   const { data: customer, isLoading } = useQuery<Customer>({  //here useQuery is used to fetch the data 
@@ -41,6 +54,31 @@ const CustomerForm = () => {
   //When you are using axios you will get "data" as name for that reason we are using "res.data"
   console.log("customerData", customer)
 
+
+  //******Creating order */
+   const { mutate, isPending: isPlaceOrderPending } = useMutation({
+        mutationKey: ['order'],
+        mutationFn: async (data: OrderData) => {
+            const idempotencyKey = idempotencyKeyRef.current
+                ? idempotencyKeyRef.current
+                : (idempotencyKeyRef.current = uuidv4() + customer?._id);
+
+            return await createOrder(data, idempotencyKey).then((res) => res.data);
+        },
+        retry: 3,
+        onSuccess: (data: { paymentUrl: string | null }) => {
+            if (data.paymentUrl) {
+                window.location.href = data.paymentUrl;
+            }
+
+            alert('Order placed successfully!');
+            dispatch(clearCart());
+
+            // todo: This will happen if payment mode is Cash.
+            // todo: 1. Clear the cart 2. Redirect the user to order status page.
+        },
+    });
+
   if (isLoading) {
     return <h3>Loading...</h3>
   }
@@ -48,6 +86,23 @@ const CustomerForm = () => {
   //After submiting the place order
   const handlePlaceOrder=(data:z.infer<typeof formSchema>)=>{
     console.log("placeOrderData",data)
+     const tenantId = searchParam.get('restaurantId');
+        if (!tenantId) {
+            alert('Restaurant Id is required!');
+            return;
+        }
+        const orderData: OrderData = {
+            cart: cart.cartItems,
+            couponCode: chosenCouponCode.current ? chosenCouponCode.current : '',
+            tenantId: tenantId,
+            customerId: customer ? customer._id : '',
+            comment: data.comment,
+            address: data.address,
+            paymentMode: data.paymentMode,
+        };
+        console.log("orderData",orderData)
+
+       mutate(orderData);
   }
 
   return (
@@ -237,7 +292,7 @@ const CustomerForm = () => {
             </CardContent>
           </Card>
           {/**Rendering order summary */}
-          <OrderSummary />
+          <OrderSummary handleCouponCodeChange={(code)=>chosenCouponCode.current=code}/>
 
         </div>
       </form>
