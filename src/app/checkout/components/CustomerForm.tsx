@@ -32,7 +32,7 @@ const formSchema = z.object({
 
 
 const CustomerForm = () => {
-
+    
     const dispatch = useAppDispatch();
   const customerForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -66,11 +66,13 @@ const CustomerForm = () => {
             return await createOrder(data, idempotencyKey).then((res) => res.data);
         },
         retry: 3,
+        //redirecting to payment page when it is success
         onSuccess: (data: { paymentUrl: string | null }) => {
             if (data.paymentUrl) {
                 window.location.href = data.paymentUrl;
             }
 
+            //If you are using cash payment
             alert('Order placed successfully!');
             dispatch(clearCart());
 
@@ -292,7 +294,7 @@ const CustomerForm = () => {
             </CardContent>
           </Card>
           {/**Rendering order summary */}
-          <OrderSummary handleCouponCodeChange={(code)=>chosenCouponCode.current=code}/>
+          <OrderSummary  isPlaceOrderPending={isPlaceOrderPending} handleCouponCodeChange={(code)=>chosenCouponCode.current=code}/>
 
         </div>
       </form>

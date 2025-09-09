@@ -55,4 +55,4 @@ export const createOrder = ( data: OrderData,idempotencyKey: string) => {
 };
 
 export const getSingleOrder = (orderId: string) =>
-    api.get(`${ORDER_SERVICE_PREFIX}/orders/${orderId}?fields=orderStatus`);
+    api.get(`/orders/${orderId}?fields=orderStatus`);

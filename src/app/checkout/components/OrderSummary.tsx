@@ -11,7 +11,7 @@ import { useSearchParams } from 'next/navigation'
 import React, { useState } from 'react'
 
 
-const OrderSummary = ({handleCouponCodeChange}:{handleCouponCodeChange:(code:string)=>void}) => {
+const OrderSummary = ({ isPlaceOrderPending, handleCouponCodeChange }: { isPlaceOrderPending: boolean, handleCouponCodeChange: (code: string) => void }) => {
 
     const searchParams = useSearchParams()
 
@@ -74,7 +74,7 @@ const OrderSummary = ({handleCouponCodeChange}:{handleCouponCodeChange:(code:str
 
             return verifyCoupon(data); // ✅ return, don’t just await
         },
-        onSuccess: (data:CouponenData) => {
+        onSuccess: (data: CouponenData) => {
             console.log("data received", data);
             if (data.valid) {
                 setDiscountError('');
@@ -91,16 +91,16 @@ const OrderSummary = ({handleCouponCodeChange}:{handleCouponCodeChange:(code:str
 
 
 
-    
+
 
 
     //Handling coupon validation
     const handleCouponValidation = (e: React.MouseEvent) => {
         e.preventDefault()
         mutate()
-        
 
-        
+
+
     }
 
     return (
@@ -153,16 +153,16 @@ const OrderSummary = ({handleCouponCodeChange}:{handleCouponCodeChange:(code:str
                     </Button>
                 </div>
 
-                <div className="text-right mt-6">
-                    <Button className='bg-orange-600'>
-
-                        {/* <span className="flex items-center gap-2">
+                <div className="text-right mt-6 ">
+                    <Button className='bg-orange-600' disabled={isPlaceOrderPending}>
+                        {isPlaceOrderPending ? (
+                            <span className="flex items-center gap-2">
                                 <LoaderCircle className="animate-spin" />
                                 <span>Please wait...</span>
-                            </span> */}
-
-                        <span>Place order</span>
-
+                            </span>
+                        ) : (
+                            <span>Place order</span>
+                        )}
                     </Button>
                 </div>
             </CardContent>

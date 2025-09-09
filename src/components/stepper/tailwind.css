@@ -1,0 +1,14 @@
+/* custom stepper override */
+.stepper-orange .step-circle {
+  background-color: #f97316 !important; /* orange-500 */
+  border-color: #f97316 !important;
+  color: white !important;
+}
+
+.stepper-orange .step-label {
+  color: #ea580c !important; /* orange-600 */
+}
+
+.stepper-orange .step-connector {
+  background-color: #fb923c !important; /* orange-400 */
+}
