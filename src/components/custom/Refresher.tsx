@@ -30,9 +30,14 @@ const Refresher = ({ children }: { children: React.ReactNode }) => {
         console.log('Failed to refresh access token');
         return;
       }
-    } catch (err: any) {
-      console.error(`Error while refreshing the token`, err);
-    }
+    }  catch (err: unknown) {
+  const message =
+    err instanceof Error ? err.message : 'Something went wrong';
+  return {
+    type: 'error',
+    message,
+  };
+}
 
     // restart the cycle after refreshing
     startRefresh();

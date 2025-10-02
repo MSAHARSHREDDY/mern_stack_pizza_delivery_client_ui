@@ -72,10 +72,13 @@ export async function POST() {
     }
 
     return Response.json({ success: true });
-  } catch (err: any) {
-    return {
-      type: 'error',
-      message: err.message,
-    };
-  }
+  } 
+  catch (err: unknown) {
+  const message =
+    err instanceof Error ? err.message : 'Something went wrong';
+  return {
+    type: 'error',
+    message,
+  };
+}
 }

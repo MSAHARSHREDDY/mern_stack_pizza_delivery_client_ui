@@ -15,7 +15,7 @@ interface FullStepProps extends StepProps, StepInternalConfig {}
 
 const Step = React.forwardRef<HTMLLIElement, StepProps>((props, ref: React.Ref<any>) => {
     const {
-        children,
+        
         description,
         icon,
         state,
@@ -30,7 +30,7 @@ const Step = React.forwardRef<HTMLLIElement, StepProps>((props, ref: React.Ref<a
         onClickStep,
     } = props as FullStepProps;
 
-    const { isVertical, isError, isLoading, clickable } = useStepper();
+    const {  isError, isLoading, clickable } = useStepper();
 
     const hasVisited = isCurrentStep || isCompletedStep;
 
