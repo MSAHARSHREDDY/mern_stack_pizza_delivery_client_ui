@@ -1,19 +1,20 @@
 import * as cookie from 'cookie'; // safer import
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 export async function POST() {
- const cookieStore = await cookies();
+  const cookieStore = await cookies();
 
   try {
     const response = await fetch(`${process.env.BACKEND_URL}/api/auth/auth/refresh`, {
-       method: 'POST',
-        headers: {
-            Authorization: `Bearer ${cookieStore.get('accessToken')?.value}`,
-            Cookie: `refreshToken=${cookieStore.get('refreshToken')?.value}`,
-        },
-   
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${cookieStore.get('accessToken')?.value}`,
+        Cookie: `refreshToken=${cookieStore.get('refreshToken')?.value}`,
+      },
+
     });
-    console.log("Response from refesher**",response)
+    console.log("Response from refesher**", response)
 
     if (!response.ok) {
       const error = await response.json();
@@ -32,10 +33,8 @@ export async function POST() {
     const refreshTokenRaw = setCookies.find((c) => c.startsWith('refreshToken='));
 
     if (!accessTokenRaw || !refreshTokenRaw) {
-      return {
-        type: 'error',
-        message: 'No cookies were found!',
-      };
+      return NextResponse.json({ type: 'error', message: 'No cookies were found!' }, { status: 400 });
+
     }
 
     // ✅ only parse key=value part
@@ -44,7 +43,7 @@ export async function POST() {
 
     console.log('parsed tokens:', parsedAccessToken, parsedRefreshToken);
 
-   
+
 
     // ✅ Use object form of .set()
     if (parsedAccessToken.accessToken) {
@@ -71,14 +70,13 @@ export async function POST() {
       });
     }
 
-    return Response.json({ success: true });
-  } 
+    return NextResponse.json({ success: true });
+
+  }
   catch (err: unknown) {
-  const message =
-    err instanceof Error ? err.message : 'Something went wrong';
-  return {
-    type: 'error',
-    message,
-  };
-}
+    const message =
+      err instanceof Error ? err.message : 'Something went wrong';
+    return NextResponse.json({ type: 'error', message }, { status: 500 });
+
+  }
 }
