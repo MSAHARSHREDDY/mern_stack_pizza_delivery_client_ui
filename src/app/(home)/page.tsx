@@ -4,17 +4,16 @@ import { Suspense } from "react";
 import ProductList from "./components/ProductList";
 import { SkeletonCard } from "./components/SkeletonCard";
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams?: Record<string, string | string[]>;
-}) {
-  // Normalize restaurantId (could be string or array from query)
+// Accept a single props object instead of destructuring in the async parameter
+export default async function Home(props: { searchParams?: Record<string, string | string[]> }) {
+  const { searchParams } = props;
+
+  // Normalize restaurantId (can be string, array, or undefined)
   const restaurantId = Array.isArray(searchParams?.restaurantId)
     ? searchParams.restaurantId[0]
     : searchParams?.restaurantId;
 
-  // Optional: handle missing restaurantId
+  // Handle missing restaurantId
   if (!restaurantId) {
     return (
       <div className="flex justify-center items-center h-screen text-xl font-bold">
