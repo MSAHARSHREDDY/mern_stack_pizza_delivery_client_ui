@@ -1,13 +1,8 @@
 
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-
-import React, { Suspense } from 'react'
-
 import Image from 'next/image';
-
 import { Product } from '@/lib/types';
 import ProductModal from './ProductModal';
-import { SkeletonCard } from './SkeletonCard';
 import { getFromPrice } from '@/lib/utils';
 
 

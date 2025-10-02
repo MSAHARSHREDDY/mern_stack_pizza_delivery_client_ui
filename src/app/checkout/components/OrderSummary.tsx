@@ -55,7 +55,7 @@ const OrderSummary = ({ isPlaceOrderPending, handleCouponCodeChange }: { isPlace
     }, [subTotal, taxesAmount, DELIVERY_CHARGES]);
 
     //verifying the coupon code
-    const { mutate, isError } = useMutation({
+    const { mutate } = useMutation({
         mutationKey: ["couponCode"],
         mutationFn: async () => {
             if (!couponCodeRef.current) {

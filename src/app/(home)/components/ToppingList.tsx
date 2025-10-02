@@ -1,9 +1,7 @@
 "use client"
-import React, { startTransition, useEffect, useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import ToppingCard from './ToppingCard'
 import { Topping } from '@/lib/types'
-import { Button } from '@/components/ui/button'
-import { ShoppingCart } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 
 const ToppingList = ({selectedToppings,handleCheckBoxCheck}:{selectedToppings:Topping[],handleCheckBoxCheck:(topping:Topping)=>void}) => {

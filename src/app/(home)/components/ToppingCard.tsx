@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import React, { useState } from 'react'
+import React from 'react'
 import Image from 'next/image';
 import { Topping } from '@/lib/types';
 import { CircleCheck } from 'lucide-react';

@@ -4,8 +4,6 @@ import React, { startTransition, Suspense, useState } from 'react'
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
-    DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
@@ -19,7 +17,6 @@ import { SkeletonCard } from './SkeletonCard';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 // import {addToCart} from "@/lib/store/features/cart/cartSice"
 import {addToCart, CartItem} from '@/lib/store/features/cart/cartSice';
-import { Value } from '@radix-ui/react-select';
 import { hashTheItem } from '@/lib/utils';
 import { toast } from "sonner"
 // ✅ Correct import
