@@ -46,11 +46,11 @@ const CustomerForm = () => {
     const cart = useAppSelector((state) => state.cart);
 
 
-  //***fetching the customer information****
-  const { data: customer, isLoading } = useQuery<Customer>({  //here useQuery is used to fetch the data 
-    queryKey: ["customer"],
-    queryFn: getCustomer
-  })
+  //***fetching the customer information***
+  const { data: customer, isLoading } = useQuery<Customer>({ //here useQuery is used to fetch the data 
+  queryKey: ["customer"],
+  queryFn: getCustomer,
+});
   //When you are using axios you will get "data" as name for that reason we are using "res.data"
   console.log("customerData", customer)
 
@@ -63,7 +63,7 @@ const CustomerForm = () => {
                 ? idempotencyKeyRef.current
                 : (idempotencyKeyRef.current = uuidv4() + customer?._id);
 
-            return await createOrder(data, idempotencyKey).then((res) => res.data);
+             return await createOrder(data, idempotencyKey); 
         },
         retry: 3,
         //redirecting to payment page when it is success

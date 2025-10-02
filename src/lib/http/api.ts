@@ -60,7 +60,9 @@
 
 
 import axios from 'axios';
-import { CouponCodeData, OrderData } from '../types';
+import { CouponCodeData, Customer, OrderData } from '../types';
+
+
 
 export const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -73,21 +75,39 @@ export const api = axios.create({
 
 const ORDER_SERVICE_PREFIX = '/api/order';
 
-export const getCustomer = () => api.get(`${ORDER_SERVICE_PREFIX}/customer`);
-export const addAddress = (customerId: string, address: string) =>
-    api.patch(`${ORDER_SERVICE_PREFIX}/customer/addresses/${customerId}`, {
-        address,
-    });
+export const getCustomer = async (): Promise<Customer> => {
+  const res = await api.get<Customer>(`${ORDER_SERVICE_PREFIX}/customer`);
+  return res.data;
+};
 
-export const verifyCoupon = (data: CouponCodeData) =>
-    api.post(`${ORDER_SERVICE_PREFIX}/coupons/verify`, data);
 
-export const createOrder = (data: OrderData, idempotencyKey: string) =>
-    api.post(`${ORDER_SERVICE_PREFIX}/orders`, data, {
-        headers: {
-            'Idempotency-Key': idempotencyKey,
-        },
-    });
+export const addAddress = async (
+  customerId: string,
+  address: string
+): Promise<any> => {
+  return await api.post(`/api/customers/${customerId}/address`, { address });
+};
+
+export const verifyCoupon = async(data: CouponCodeData): Promise<any>  =>{
+     return await api.post(`${ORDER_SERVICE_PREFIX}/coupons/verify`, data);
+}
+
+export const createOrder = async (
+  data: OrderData,
+  idempotencyKey: string
+): Promise<{ paymentUrl: string | null }> => {
+  const res = await api.post<{ paymentUrl: string | null }>(
+    `${ORDER_SERVICE_PREFIX}/orders`,
+    data,
+    {
+      headers: { "Idempotency-Key": idempotencyKey },
+    }
+  );
+
+  return res.data;
+};
+
 
 export const getSingleOrder = (orderId: string) =>
     api.get(`${ORDER_SERVICE_PREFIX}/orders/${orderId}?fields=orderStatus`);
+
