@@ -5,8 +5,11 @@ import ProductList from "./components/ProductList";
 import { SkeletonCard } from "./components/SkeletonCard";
 
 // Accept a single props object instead of destructuring in the async parameter
-export default async function Home(props: { searchParams?: Record<string, string | string[]> }) {
-  const searchParams = props.searchParams;
+export default function Home({
+  searchParams,
+}: {
+  searchParams?: Record<string, string | string[]>;
+}) {
   const restaurantId = Array.isArray(searchParams?.restaurantId)
     ? searchParams.restaurantId[0]
     : searchParams?.restaurantId;
