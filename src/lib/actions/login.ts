@@ -182,7 +182,7 @@ export default async function login(prevState: any, formdata: FormData) {
   const password = formdata.get('password');
 
   try {
-    const response = await fetch(`${process.env.BACKEND_URL_USER_LOGIN}`, {
+    const response = await fetch(`${process.env.BACKEND_URL}/api/auth/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -10,7 +10,7 @@ export default async function register(prevState: any, formdata: FormData) {
     const password = formdata.get('password');
 
   try {
-    const response = await fetch(`${process.env.BACKEND_URL_FETCH_USER_REGISTER}`, {
+    const response = await fetch(`${process.env.BACKEND_URL}/api/auth/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -17,7 +17,7 @@ const Header = async() => {
     const session=await getSession()//This session helps you to get complete user information once user has logged in
     console.log("session",session)
     {/**Fetching tenant/restarant from backendEnd */}
-    const tenantsResponse=await fetch(`${process.env.BACKEND_URL_FETCH_TENANTS}?perPage=100`,{
+    const tenantsResponse=await fetch(`${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`,{
         next:{
             revalidate: 0//0 second It is used for caching the data make sure be aware of this. And fetches new data for every 0 second from backend when u update the data it fetches in 0 second.
         }

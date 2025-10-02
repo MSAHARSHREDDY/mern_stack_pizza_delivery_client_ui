@@ -5,7 +5,7 @@ export async function POST() {
  const cookieStore = await cookies();
 
   try {
-    const response = await fetch(`${process.env.BACKEND_URL_FETCH_USER_REFRESH}`, {
+    const response = await fetch(`${process.env.BACKEND_URL}/api/auth/auth/refresh`, {
        method: 'POST',
         headers: {
             Authorization: `Bearer ${cookieStore.get('accessToken')?.value}`,

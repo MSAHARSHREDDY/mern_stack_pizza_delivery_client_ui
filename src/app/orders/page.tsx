@@ -14,7 +14,7 @@ import Link from 'next/link';
 import React from 'react'
 
 const Orders = async () => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_ODERSERVICE_URL}/orders/mine`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/api/order/orders/mine`, {
     headers: {
       Authorization: `Bearer ${(await cookies()).get('accessToken')?.value}`
     }

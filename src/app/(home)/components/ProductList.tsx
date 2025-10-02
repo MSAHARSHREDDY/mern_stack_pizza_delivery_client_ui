@@ -8,7 +8,7 @@ const ProductList = async({searchParams}:{searchParams:{restaurantId:string}}) =
   console.log("searchParam",searchParams.restaurantId)
     
       {/*******Fetching categories from backendEnd **********************/ }
-      const catgeoryResponse = await fetch(`${process.env.BACKEND_URL_FETCH_CATEGORIES}`, {
+      const catgeoryResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/categories`, {
         next: {
           revalidate: 0//0 second It is used for caching the data make sure be aware of this. And fetches new data for every 0 second from backend when u update the data it fetches in 0 second.
         }
@@ -20,15 +20,16 @@ const ProductList = async({searchParams}:{searchParams:{restaurantId:string}}) =
       console.log("categories", categories)
     
       {/******Fetching products from backend*************************** */ }
-      const productResponse = await fetch(`${process.env.BACKEND_URL_FETCH_PRODUCTS}?perPage=100&tenantId=${searchParams.restaurantId}`, {
-        
-      })
-      if (!productResponse.ok) {
-        throw new Error("Failed to fetch products")
-      }
-      //If you are having pagination we get "data" as name so need to add "data" on i.e data:Product[]
-      const products: { data: Product[] } = await productResponse.json()
-      console.log("products", products)
+      const productsResponse = await fetch(
+        `${process.env.BACKEND_URL}/api/catalog/products?perPage=100&limit=100&tenantId=${searchParams.restaurantId}`,
+        {
+            next: {
+                revalidate: 3600, // 1 hour
+            },
+        }
+    );
+
+    const products: { data: Product[] } = await productsResponse.json();
   return (
  
       <section>

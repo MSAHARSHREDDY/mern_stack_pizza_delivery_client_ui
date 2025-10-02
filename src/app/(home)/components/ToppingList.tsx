@@ -13,13 +13,17 @@ const ToppingList = ({selectedToppings,handleCheckBoxCheck}:{selectedToppings:To
     {/**We need to use useEffect when we are using "use client" to fetch data */ }
     useEffect(() => {
         const fetchData = async () => {
-            const toppingResponse = await fetch(`${process.env.NEXT_PUBLIC_FETCH_TOPPINGS}/api/catalog/toppings?tenantId=${searchParams.get("restaurantId")}`)
-            const toppings = await toppingResponse.json()
-            setToppings(toppings)
-            console.log("toppings", toppings)
-        }
-        fetchData()
-    }, [])
+            const toppingResponse = await fetch(
+                `${
+                    process.env.NEXT_PUBLIC_BACKEND_URL
+                }/api/catalog/toppings?tenantId=${searchParams.get('restaurantId')}`
+            );
+            const toppings = await toppingResponse.json();
+            setToppings(toppings);
+            console.log('toppings', toppings);
+        };
+        fetchData();
+    }, []);
 
 
    

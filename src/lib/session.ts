@@ -25,7 +25,7 @@ const getSelf = async (): Promise<Session | null> => {
     return null;
   }
 
-  const response = await fetch(`${process.env.BACKEND_URL_FETCH_USER_SELF}`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/api/auth/auth/self`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

@@ -9,7 +9,7 @@ import OrderStatus from './components/OrderStatus';
 
 const SingleOrder = async({params}:{params:{orderId:string}}) => {
     console.log("params",params)
-    const response=await fetch(`${process.env.NEXT_PUBLIC_ODERSERVICE_URL}/orders/${params.orderId}?fields=address,paymentStatus,paymentMode`,{
+    const response=await fetch(`${process.env.BACKEND_URL}/api/order/orders/${params.orderId}?fields=address,paymentStatus,paymentMode`,{
         headers:{
             Authorization: `Bearer ${(await cookies()).get('accessToken')?.value}`
         }

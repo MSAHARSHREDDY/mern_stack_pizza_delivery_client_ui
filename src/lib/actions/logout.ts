@@ -8,7 +8,7 @@ export const logout = async () => {
   const accessToken = cookieStore.get('accessToken')?.value;//if you keep ? helps to avoid from undefined error.
   const refreshToken = cookieStore.get('refreshToken')?.value;//if you keep ? helps to avoid from undefined error.
 
-  const response = await fetch(`${process.env.BACKEND_URL_FETCH_USER_LOGOUT}`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/api/auth/auth/logout`, {
     method: 'POST',
     headers: {
       Authorization: accessToken ? `Bearer ${accessToken}` : '',
