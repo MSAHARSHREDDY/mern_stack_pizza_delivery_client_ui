@@ -87,19 +87,32 @@ const ProductModal = ({ product }: { product: Product }) => {
     }, [product, chosenConfig, selectedToppings, cartItems]);
 
     //It is used to handle Tick mark in topping
+    // const handleCheckBoxCheck = (topping: Topping) => {
+    //     console.log("selectedToppings in handleCheckBoxCheck", selectedToppings)
+    //     const isAlreadyExists = selectedToppings.some((element: Topping) => element._id === topping._id)
+
+    //     startTransition(() => {
+    //         if (isAlreadyExists) {
+    //             setSelectedToppings((prev) => prev.filter((elm: Topping) => elm._id !== topping._id))
+    //             return
+    //         }
+    //         setSelectedToppings((prev: Topping[]) => [...prev, topping])
+    //     })
+
+    // }
+
+
     const handleCheckBoxCheck = (topping: Topping) => {
-        console.log("selectedToppings in handleCheckBoxCheck", selectedToppings)
-        const isAlreadyExists = selectedToppings.some((element: Topping) => element._id === topping._id)
-
-        startTransition(() => {
-            if (isAlreadyExists) {
-                setSelectedToppings((prev) => prev.filter((elm: Topping) => elm._id !== topping._id))
-                return
-            }
-            setSelectedToppings((prev: Topping[]) => [...prev, topping])
-        })
-
+  setSelectedToppings((prev) => {
+    const exists = prev.some((item) => item._id === topping._id);
+    if (exists) {
+      return prev.filter((item) => item._id !== topping._id);
+    } else {
+      return [...prev, topping];
     }
+  });
+};
+
     
     const handleRadioChange = (key: string, data: string) => {
         {/**

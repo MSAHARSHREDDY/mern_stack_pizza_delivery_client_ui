@@ -32,7 +32,7 @@ const ToppingList = ({selectedToppings,handleCheckBoxCheck}:{selectedToppings:To
                 {
                     toppings.map((topping) => (
                         //Here left side topping,selectedToppings,handleCheckBoxCheck is the name of the prop and right side topping,selectedToppings,handleCheckBoxCheck where we are the passing the actual value
-                        <ToppingCard topping={topping} key={topping._id} selectedToppings={selectedToppings} handleCheckBoxCheck={handleCheckBoxCheck} />
+                        <ToppingCard topping={topping}  key={topping._id} selectedToppings={selectedToppings} handleCheckBoxCheck={handleCheckBoxCheck} />
                     ))
                 }
             </div>
