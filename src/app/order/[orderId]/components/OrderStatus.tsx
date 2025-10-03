@@ -28,14 +28,30 @@ const StepperChanger = ({ orderId }: { orderId: string }) => {
 
   
 
-  const { data } = useQuery<Order>({
+//   const { data } = useQuery<Order>({
+//   queryKey: ['order', orderId],
+//   queryFn: async (): Promise<Order> => {
+//     const res = await getSingleOrder(orderId);
+//     return res.data as Order; // ensure correct type
+//   },
+//   refetchInterval: 1000 * 30, //30seconds
+// });
+
+const { data } = useQuery<Order>({
   queryKey: ['order', orderId],
   queryFn: async (): Promise<Order> => {
-    const res = await getSingleOrder(orderId);
-    return res.data as Order; // ensure correct type
+    const token = localStorage.getItem("accessToken"); // or wherever you store it
+
+    if (!token) {
+      throw new Error("User not authenticated");
+    }
+
+    const res = await getSingleOrder(orderId, token);
+    return res.data as Order;
   },
-  refetchInterval: 1000 * 30, //30seconds
+  refetchInterval: 1000 * 30,
 });
+
 
 
   React.useEffect(() => {
