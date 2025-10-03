@@ -100,6 +100,7 @@ export const createOrder = async (
     `${ORDER_SERVICE_PREFIX}/orders`,
     data,
     {
+      withCredentials: true,
       headers: { "Idempotency-Key": idempotencyKey },
     }
   );
@@ -109,5 +110,8 @@ export const createOrder = async (
 
 
 export const getSingleOrder = (orderId: string) =>
-    api.get(`${ORDER_SERVICE_PREFIX}/orders/${orderId}?fields=orderStatus`);
+    api.get(
+        `${ORDER_SERVICE_PREFIX}/orders/${orderId}?fields=orderStatus`,
+        { withCredentials: true }
+    );
 
