@@ -1,8 +1,3 @@
-
-
-
-
-
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import ProductList from './components/ProductList';
@@ -12,9 +7,10 @@ export default async function Home({ searchParams }: { searchParams: { restauran
     return (
         <>
             <section className="bg-white">
-                <div className="container flex items-center justify-between py-24">
+                <div className="container flex flex-col md:flex-row items-start md:items-center justify-between py-24 gap-12">
+                    {/* Left: Text content */}
                     <div>
-                        <h1 className="text-7xl font-black font-sans leading-2">
+                        <h1 className="text-7xl font-black font-sans leading-tight">
                             Super Delicious Pizza in <br />
                             <span className="text-primary">Only 45 Minutes!</span>
                         </h1>
@@ -25,12 +21,15 @@ export default async function Home({ searchParams }: { searchParams: { restauran
                             Get your pizza now
                         </Button>
                     </div>
+
+                    {/* Right: Image */}
                     <div>
                         <Image alt="pizza-main" src={'/pizza-main.png'} width={400} height={400} />
                     </div>
                 </div>
             </section>
-            {/* todo: add skeleton component */}
+
+            {/* Product list with Suspense */}
             <Suspense fallback={'Loading....'}>
                 <ProductList searchParams={searchParams} />
             </Suspense>
