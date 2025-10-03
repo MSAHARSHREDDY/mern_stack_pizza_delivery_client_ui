@@ -1,12 +1,11 @@
 
-import { Phone, ShoppingBasket } from "lucide-react"
+
 import Link from "next/link"
 import React from "react"
 import { Button } from "../ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Tenant } from "@/lib/types"
-import CartCounter from "./CartCounter"
-import dynamic from "next/dynamic"
+
 import CartCounterWithoutSSR from "./CartCounterWithoutSSR"
 import TenantSelect from "./TenantSelect"
 import { getSession } from "@/lib/session"
@@ -31,7 +30,8 @@ const Header = async() => {
     return (
         
         <header className="bg-white">
-            <nav className="container  px-6 py-5 flex items-center justify-between">
+            {/* <nav className="container  px-6 py-5 flex items-center justify-between"> */}
+           <nav className="container px-6 py-5 flex flex-col items-center justify-center gap-4">
 
 
                 <div className="flex items-center space-x-4">
@@ -64,10 +64,7 @@ const Header = async() => {
                     { <CartCounterWithoutSSR /> }
                    
                   
-                    <div className="flex items-center ml-12">
-                        <Phone />
-                        <span>+91 9800 098 998</span>
-                    </div>
+                   
 
                     {
                         session? 
