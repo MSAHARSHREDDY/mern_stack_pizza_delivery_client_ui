@@ -85,7 +85,7 @@ export const addAddress = async (
   customerId: string,
   address: string
 ): Promise<any> => {
-  return await api.post(`${ORDER_SERVICE_PREFIX}/customer/addresses/${customerId}`, { address });
+  return await api.patch(`${ORDER_SERVICE_PREFIX}/customer/addresses/${customerId}`, { address });
 };
 
 export const verifyCoupon = async(data: CouponCodeData): Promise<any>  =>{
