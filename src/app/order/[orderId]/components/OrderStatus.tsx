@@ -47,6 +47,7 @@ const { data } = useQuery<Order>({
     }
 
     const res = await getSingleOrder(orderId, token);
+    console.log("Fetched Order Status:", res.data.orderStatus)
     return res.data as Order;
   },
   refetchInterval: 1000 * 30,
