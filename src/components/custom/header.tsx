@@ -30,8 +30,8 @@ const Header = async() => {
     return (
         
         <header className="bg-white">
-            {/* <nav className="container  px-6 py-5 flex items-center justify-between"> */}
-           <nav className="container px-6 py-5 flex flex-col items-center justify-center gap-4">
+            <nav className="container  px-6 py-5 flex items-center justify-between">
+          
 
 
                 <div className="flex items-center space-x-4">
