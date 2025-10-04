@@ -26,13 +26,18 @@ const statusMapping = {
 const StepperChanger = ({ orderId }: { orderId: string }) => {
     const { setStep } = useStepper();
 
-    const { data } = useQuery<Order>({
-        queryKey: ['order', orderId],
-        queryFn: async () => {
-            return await getSingleOrder(orderId).then((res) => res.data);
-        },
-        refetchInterval: 1000 * 30, // every 30 secs.
-    });
+   const { data } = useQuery<Order>({
+  queryKey: ['order', orderId],
+  queryFn: async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("User not authenticated");
+
+    const res = await getSingleOrder(orderId, token);
+    return res.data;
+  },
+  refetchInterval: 1000 * 30,
+});
+
 
     React.useEffect(() => {
         if (data) {
