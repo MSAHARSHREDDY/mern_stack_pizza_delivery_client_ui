@@ -8,121 +8,50 @@ import { CheckCheck, FileCheck, Microwave, Package, PackageCheck } from 'lucide-
 import React from 'react';
 
 const steps = [
-  { label: 'Received', icon: FileCheck, description: 'We are confirming your order' },
-  { label: 'Confirmed', icon: Package, description: 'We have started preparing your order' },
-  { label: 'Prepared', icon: Microwave, description: 'Ready for the pickup' },
-  { label: 'Out for delivery', icon: PackageCheck, description: 'Driver is on the way' },
-  { label: 'Delivered', icon: CheckCheck, description: 'Order completed' },
+    { label: 'Received', icon: FileCheck, description: 'We are confirming your order' },
+    { label: 'Confirmed', icon: Package, description: 'We have started preparing your order' },
+    { label: 'Prepared', icon: Microwave, description: 'Ready for the pickup' },
+    { label: 'Out for delivery', icon: PackageCheck, description: 'Driver is on the way' },
+    { label: 'Delivered', icon: CheckCheck, description: 'Order completed' },
 ] satisfies StepItem[];
 
 const statusMapping = {
-  received: 0,
-  confirmed: 1,
-  prepared: 2,
-  out_for_delivery: 3,
-  delivered: 4,
+    received: 0,
+    confirmed: 1,
+    prepared: 2,
+    out_for_delivery: 3,
+    delivered: 4,
 } as { [key: string]: number };
 
-// const StepperChanger = ({ orderId }: { orderId: string }) => {
-//   const { setStep } = useStepper();
-
-  
-
-// //   const { data } = useQuery<Order>({
-// //   queryKey: ['order', orderId],
-// //   queryFn: async (): Promise<Order> => {
-// //     const res = await getSingleOrder(orderId);
-// //     return res.data as Order; // ensure correct type
-// //   },
-// //   refetchInterval: 1000 * 30, //30seconds
-// // });
-
-// const { data } = useQuery<Order>({
-//   queryKey: ['order', orderId],
-//   queryFn: async (): Promise<Order> => {
-//     const token = localStorage.getItem("accessToken"); // or wherever you store it
-
-//     if (!token) {
-//       throw new Error("User not authenticated");
-//     }
-
-//     const res = await getSingleOrder(orderId, token);
-    
-//     return res.data as Order;
-//   },
-//   refetchInterval:false,
-// });
-
-
-
-//   React.useEffect(() => {
-//     if (data) {
-//       const currentStep = statusMapping[data.orderStatus] || 0;
-//       setStep(currentStep + 1);
-//     }
-//   }, [data, setStep]);
-
-//   return null;
-// };
-
-
-
 const StepperChanger = ({ orderId }: { orderId: string }) => {
-  const { setStep } = useStepper();
+    const { setStep } = useStepper();
 
-  const { data, refetch } = useQuery<Order>({
-    queryKey: ['order', orderId],
-    queryFn: async (): Promise<Order> => {
-      const token = localStorage.getItem("accessToken");
-      if (!token) throw new Error("User not authenticated");
+    const { data } = useQuery<Order>({
+        queryKey: ['order', orderId],
+        queryFn: async () => {
+            return await getSingleOrder(orderId).then((res) => res.data);
+        },
+        refetchInterval: 1000 * 30, // every 30 secs.
+    });
 
-      const res = await getSingleOrder(orderId, token);
-      return res.data as Order;
-    },
-    refetchInterval: false, // disabled
-    refetchOnWindowFocus: true,
-  });
-
-  // Auto refresh every 5 sec or remove entirely
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      refetch();
-    }, 5000); // <-- change or remove this
-
-    return () => clearInterval(interval);
-  }, [refetch]);
-
-  React.useEffect(() => {
-    if (data?.orderStatus) {
-      const currentStep =
-        statusMapping[data.orderStatus.toLowerCase()] ?? 0;
-      setStep(currentStep);
-    }
-  }, [data, setStep]);
-
-  return null;
+    React.useEffect(() => {
+        if (data) {
+            const currentStep = statusMapping[data.orderStatus] || 0;
+            setStep(currentStep + 1);
+        }
+    }, [data]);
+    return <></>;
 };
 
-
 const OrderStatus = ({ orderId }: { orderId: string }) => {
-  return (
-    <Stepper
-      initialStep={0}
-      steps={steps}
-      variant="circle-alt"
-      className="py-8 stepper-orange"
-    >
-      {steps.map(({ label, icon }) => (
-        <Step
-          key={label}
-          label={label}
-          icon={icon}
-          checkIcon={icon}
-        />
-      ))}
-      <StepperChanger orderId={orderId} />
-    </Stepper>
-  );
+    return (
+        <Stepper initialStep={0} steps={steps} variant="circle-alt" className="py-8">
+            {steps.map(({ label, icon }) => {
+                return <Step label={label} icon={icon} checkIcon={icon} key={label}></Step>;
+            })}
+            <StepperChanger orderId={orderId} />
+        </Stepper>
+    );
 };
 
 export default OrderStatus;

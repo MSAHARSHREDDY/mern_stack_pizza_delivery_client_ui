@@ -60,7 +60,7 @@
 
 
 import axios from 'axios';
-import { CouponCodeData, Customer, OrderData } from '../types';
+import { CouponCodeData, Customer, Order, OrderData } from '../types';
 
 
 
@@ -109,16 +109,21 @@ export const createOrder = async (
 };
 
 
-export const getSingleOrder = async (orderId: string, token: string) => {
-  return await api.get(
-    `${ORDER_SERVICE_PREFIX}/orders/${orderId}?fields=orderStatus`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      withCredentials: true,
-    }
-  );
-};
+// export const getSingleOrder = async (orderId: string, token: string) => {
+//   return await api.get(
+//     `${ORDER_SERVICE_PREFIX}/orders/${orderId}?fields=orderStatus`,
+//     {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//       withCredentials: true,
+//     }
+//   );
+// };
 
+
+
+
+export const getSingleOrder = (orderId: string) =>
+  api.get<Order>(`${ORDER_SERVICE_PREFIX}/orders/${orderId}?fields=orderStatus`);
 
