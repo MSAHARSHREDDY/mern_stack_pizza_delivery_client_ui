@@ -23,47 +23,86 @@ const statusMapping = {
   delivered: 4,
 } as { [key: string]: number };
 
-const StepperChanger = ({ orderId }: { orderId: string }) => {
-  const { setStep } = useStepper();
+// const StepperChanger = ({ orderId }: { orderId: string }) => {
+//   const { setStep } = useStepper();
 
   
 
-//   const { data } = useQuery<Order>({
+// //   const { data } = useQuery<Order>({
+// //   queryKey: ['order', orderId],
+// //   queryFn: async (): Promise<Order> => {
+// //     const res = await getSingleOrder(orderId);
+// //     return res.data as Order; // ensure correct type
+// //   },
+// //   refetchInterval: 1000 * 30, //30seconds
+// // });
+
+// const { data } = useQuery<Order>({
 //   queryKey: ['order', orderId],
 //   queryFn: async (): Promise<Order> => {
-//     const res = await getSingleOrder(orderId);
-//     return res.data as Order; // ensure correct type
+//     const token = localStorage.getItem("accessToken"); // or wherever you store it
+
+//     if (!token) {
+//       throw new Error("User not authenticated");
+//     }
+
+//     const res = await getSingleOrder(orderId, token);
+    
+//     return res.data as Order;
 //   },
-//   refetchInterval: 1000 * 30, //30seconds
+//   refetchInterval:false,
 // });
 
-const { data } = useQuery<Order>({
-  queryKey: ['order', orderId],
-  queryFn: async (): Promise<Order> => {
-    const token = localStorage.getItem("accessToken"); // or wherever you store it
-
-    if (!token) {
-      throw new Error("User not authenticated");
-    }
-
-    const res = await getSingleOrder(orderId, token);
-    
-    return res.data as Order;
-  },
-  refetchInterval: 1000 * 30,
-});
 
 
+//   React.useEffect(() => {
+//     if (data) {
+//       const currentStep = statusMapping[data.orderStatus] || 0;
+//       setStep(currentStep + 1);
+//     }
+//   }, [data, setStep]);
+
+//   return null;
+// };
+
+
+
+const StepperChanger = ({ orderId }: { orderId: string }) => {
+  const { setStep } = useStepper();
+
+  const { data, refetch } = useQuery<Order>({
+    queryKey: ['order', orderId],
+    queryFn: async (): Promise<Order> => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("User not authenticated");
+
+      const res = await getSingleOrder(orderId, token);
+      return res.data as Order;
+    },
+    refetchInterval: false, // disabled
+    refetchOnWindowFocus: true,
+  });
+
+  // Auto refresh every 5 sec or remove entirely
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 5000); // <-- change or remove this
+
+    return () => clearInterval(interval);
+  }, [refetch]);
 
   React.useEffect(() => {
-    if (data) {
-      const currentStep = statusMapping[data.orderStatus] || 0;
-      setStep(currentStep + 1);
+    if (data?.orderStatus) {
+      const currentStep =
+        statusMapping[data.orderStatus.toLowerCase()] ?? 0;
+      setStep(currentStep);
     }
   }, [data, setStep]);
 
   return null;
 };
+
 
 const OrderStatus = ({ orderId }: { orderId: string }) => {
   return (
